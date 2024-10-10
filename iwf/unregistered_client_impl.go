@@ -191,6 +191,30 @@ func (u *unregisteredClientImpl) GetComplexWorkflowResults(ctx context.Context, 
 	return resp.Results, nil
 }
 
+func (u *unregisteredClientImpl) WaitForStateExecutionCompletion(ctx context.Context, workflowId string, workflowState WorkflowState, stateExecutionNumber int) error {
+	stateExecutionId := GetStateExecutionId(workflowState, stateExecutionNumber)
+	workflowStateId := workflowState.GetStateId()
+	req := u.apiClient.DefaultApi.ApiV1WorkflowWaitForStateCompletionPost(ctx)
+
+	_, httpResp, err := req.WorkflowWaitForStateCompletionRequest(iwfidl.WorkflowWaitForStateCompletionRequest{
+		WorkflowId:       workflowId,
+		StateId:          &workflowStateId,
+		StateExecutionId: &stateExecutionId,
+	}).Execute()
+
+	// iwfidl.WorkflowWaitForStateCompletionResponse
+	// v := iwfidl.StateCompletionOutput.CompletedStateOutput
+	if err := u.processError(err, httpResp); err != nil {
+		return err
+	}
+
+	// if outputPtr != nil {
+	// 	return u.options.ObjectEncoder.Decode(resp.Output, outputPtr)
+	// }
+
+	return nil
+}
+
 func (u *unregisteredClientImpl) ResetWorkflow(ctx context.Context, workflowId, workflowRunId string, options *ResetWorkflowOptions) (string, error) {
 	resetType := iwfidl.BEGINNING
 	reason := ptr.Any("")

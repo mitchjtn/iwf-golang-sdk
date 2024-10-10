@@ -78,6 +78,8 @@ type ClientCommon interface {
 	// GetAllWorkflowDataAttributes returns all the data objects of a workflow execution
 	// workflowId is required, workflowRunId is optional and default to current runId of the workflowId
 	GetAllWorkflowDataAttributes(ctx context.Context, workflowId, workflowRunId string) (map[string]Object, error)
+	// WaitForStateExecutionCompletion
+	WaitForStateExecutionCompletion(ctx context.Context, workflowId string, workflowState WorkflowState, stateExecutionNumber int) error
 }
 
 // UnregisteredClient is a client without workflow registry
