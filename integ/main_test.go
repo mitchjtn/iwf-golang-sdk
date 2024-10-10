@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/indeedeng/iwf-golang-sdk/gen/iwfidl"
-	"github.com/indeedeng/iwf-golang-sdk/iwf"
+	"github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
+	"github.com/mitchjtn/iwf-golang-sdk/iwf"
 )
 
 func TestMain(m *testing.M) {

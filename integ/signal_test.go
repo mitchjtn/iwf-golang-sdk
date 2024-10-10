@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/indeedeng/iwf-golang-sdk/iwf"
+	"github.com/mitchjtn/iwf-golang-sdk/iwf"
 	"github.com/stretchr/testify/assert"
 )
 

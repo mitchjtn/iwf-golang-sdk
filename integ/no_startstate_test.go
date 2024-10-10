@@ -2,7 +2,7 @@ package integ
 
 import (
 	"context"
-	"github.com/indeedeng/iwf-golang-sdk/gen/iwfidl"
+	"github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
 	"strconv"
 	"testing"
 	"time"

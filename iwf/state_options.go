@@ -1,7 +1,7 @@
 package iwf
 
 import (
-	"github.com/indeedeng/iwf-golang-sdk/gen/iwfidl"
+	"github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
 )
 
 type StateOptions struct {
