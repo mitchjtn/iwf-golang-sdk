@@ -3,10 +3,11 @@ package iwf
 import (
 	"context"
 	"fmt"
-	"github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
-	"github.com/mitchjtn/iwf-golang-sdk/iwf/ptr"
 	"strconv"
 	"time"
+
+	"github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
+	"github.com/mitchjtn/iwf-golang-sdk/iwf/ptr"
 )
 
 type clientImpl struct {
@@ -46,6 +47,8 @@ func (c *clientImpl) StartWorkflow(ctx context.Context, workflow ObjectWorkflow,
 			return "", err
 		}
 		unregOpt.InitialSearchAttributes = convertedSAs
+		unregOpt.WaitForCompletionStateExecutionIds = getWaitForCompletionStateExecutionIds(options.WaitForCompletionState)
+		unregOpt.WaitForCompletionStateIds = getWaitForCompletionStateIds(options.WaitForCompletionState)
 	}
 	return c.UnregisteredClient.StartWorkflow(ctx, wfType, startStateId, workflowId, timeoutSecs, input, unregOpt)
 }

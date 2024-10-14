@@ -30,7 +30,7 @@ func (u *unregisteredClientImpl) StartWorkflow(ctx context.Context, workflowType
 	}
 	var stateOptions *iwfidl.WorkflowStateOptions
 	var startOptions *iwfidl.WorkflowStartOptions
-	var stateExecutionIds []string
+	var stateExecutionIds, stateIds []string
 	if options != nil {
 		for _, sa := range options.InitialSearchAttributes {
 			val, _ := getSearchAttributeValue(sa)
@@ -47,7 +47,8 @@ func (u *unregisteredClientImpl) StartWorkflow(ctx context.Context, workflowType
 			SearchAttributes:          options.InitialSearchAttributes,
 		}
 
-		stateExecutionIds = getWaitForCompletionStateExecutionIds(options.WaitForCompletionState)
+		stateExecutionIds = options.WaitForCompletionStateExecutionIds
+		stateIds = options.WaitForCompletionStateIds
 	}
 
 	req := u.apiClient.DefaultApi.ApiV1WorkflowStartPost(ctx)
@@ -61,6 +62,7 @@ func (u *unregisteredClientImpl) StartWorkflow(ctx context.Context, workflowType
 		StateOptions:                       stateOptions,
 		WorkflowStartOptions:               startOptions,
 		WaitForCompletionStateExecutionIds: stateExecutionIds,
+		WaitForCompletionStateIds:          stateIds,
 	}).Execute()
 	if err := u.processError(err, httpResp); err != nil {
 		return "", err
