@@ -9,4 +9,15 @@ type UnregisteredWorkflowOptions struct {
 	WorkflowRetryPolicy       *iwfidl.WorkflowRetryPolicy
 	StartStateOptions         *iwfidl.WorkflowStateOptions
 	InitialSearchAttributes   []iwfidl.SearchAttribute
+	WaitForCompletionState    []WorkflowState
+}
+
+func getWaitForCompletionStateExecutionIds(states []WorkflowState) []string {
+	results := []string{}
+
+	for _, state := range states {
+		results = append(results, GetStateExecutionId(state, 1))
+	}
+
+	return results
 }
