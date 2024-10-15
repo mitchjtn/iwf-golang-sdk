@@ -12,8 +12,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	iwfidl "github.com/indeedeng/iwf-golang-sdk/gen/iwfidl"
-	iwf "github.com/indeedeng/iwf-golang-sdk/iwf"
+	iwfidl "github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
+	iwf "github.com/mitchjtn/iwf-golang-sdk/iwf"
 	gomock "go.uber.org/mock/gomock"
 )
 

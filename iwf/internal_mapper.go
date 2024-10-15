@@ -1,10 +1,10 @@
 package iwf
 
 import (
-	"github.com/indeedeng/iwf-golang-sdk/iwf/ptr"
+	"github.com/mitchjtn/iwf-golang-sdk/iwf/ptr"
 	"strings"
 
-	"github.com/indeedeng/iwf-golang-sdk/gen/iwfidl"
+	"github.com/mitchjtn/iwf-golang-sdk/gen/iwfidl"
 )
 
 func fromIdlCommandResults(results *iwfidl.CommandResults, encoder ObjectEncoder) (CommandResults, error) {

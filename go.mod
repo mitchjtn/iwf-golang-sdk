@@ -1,4 +1,4 @@
-module github.com/indeedeng/iwf-golang-sdk
+module github.com/mitchjtn/iwf-golang-sdk
 
 go 1.18
 
