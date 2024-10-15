@@ -1,6 +1,7 @@
 package iwf
 
 import (
+	"fmt"
 	"reflect"
 )
 
@@ -61,6 +62,10 @@ func GetFinalWorkflowStateId(workflowState WorkflowState) string {
 		return getSimpleTypeNameFromReflect(workflowState)
 	}
 	return sid
+}
+
+func GetStateExecutionId(workflowState WorkflowState, number int) string {
+	return fmt.Sprintf("%s-%d", getSimpleTypeNameFromReflect(workflowState), number)
 }
 
 // WorkflowStateDefaults is a convenient struct to put into your state implementation to save the boilerplate code. Eg:

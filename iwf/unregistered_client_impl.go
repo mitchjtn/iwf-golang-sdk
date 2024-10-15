@@ -30,6 +30,7 @@ func (u *unregisteredClientImpl) StartWorkflow(ctx context.Context, workflowType
 	}
 	var stateOptions *iwfidl.WorkflowStateOptions
 	var startOptions *iwfidl.WorkflowStartOptions
+	var stateExecutionIds []string
 	if options != nil {
 		for _, sa := range options.InitialSearchAttributes {
 			val, _ := getSearchAttributeValue(sa)
@@ -44,18 +45,21 @@ func (u *unregisteredClientImpl) StartWorkflow(ctx context.Context, workflowType
 			RetryPolicy:      options.WorkflowRetryPolicy,
 			SearchAttributes: options.InitialSearchAttributes,
 		}
+
+		stateExecutionIds = options.WaitForCompletionStateExecutionIds
 	}
 
 	req := u.apiClient.DefaultAPI.ApiV1WorkflowStartPost(ctx)
 	resp, httpResp, err := req.WorkflowStartRequest(iwfidl.WorkflowStartRequest{
-		WorkflowId:             workflowId,
-		IwfWorkflowType:        workflowType,
-		WorkflowTimeoutSeconds: timeoutSecs,
-		IwfWorkerUrl:           u.options.WorkerUrl,
-		StartStateId:           startStateIdPtr,
-		StateInput:             encodedInput,
-		StateOptions:           stateOptions,
-		WorkflowStartOptions:   startOptions,
+		WorkflowId:                         workflowId,
+		IwfWorkflowType:                    workflowType,
+		WorkflowTimeoutSeconds:             timeoutSecs,
+		IwfWorkerUrl:                       u.options.WorkerUrl,
+		StartStateId:                       startStateIdPtr,
+		StateInput:                         encodedInput,
+		StateOptions:                       stateOptions,
+		WorkflowStartOptions:               startOptions,
+		WaitForCompletionStateExecutionIds: stateExecutionIds,
 	}).Execute()
 	if err := u.processError(err, httpResp); err != nil {
 		return "", err
@@ -188,6 +192,28 @@ func (u *unregisteredClientImpl) GetComplexWorkflowResults(ctx context.Context, 
 		return nil, u.processUncompletedError(resp)
 	}
 	return resp.Results, nil
+}
+
+func (u *unregisteredClientImpl) WaitForStateExecutionCompletion(ctx context.Context, workflowId string, workflowState WorkflowState, stateExecutionNumber int) error {
+	stateExecutionId := GetStateExecutionId(workflowState, stateExecutionNumber)
+	req := u.apiClient.DefaultAPI.ApiV1WorkflowWaitForStateCompletionPost(ctx)
+
+	_, httpResp, err := req.WorkflowWaitForStateCompletionRequest(iwfidl.WorkflowWaitForStateCompletionRequest{
+		WorkflowId:       workflowId,
+		StateExecutionId: stateExecutionId,
+	}).Execute()
+
+	// iwfidl.WorkflowWaitForStateCompletionResponse
+	// v := iwfidl.StateCompletionOutput.CompletedStateOutput
+	if err := u.processError(err, httpResp); err != nil {
+		return err
+	}
+
+	// if outputPtr != nil {
+	// 	return u.options.ObjectEncoder.Decode(resp.Output, outputPtr)
+	// }
+
+	return nil
 }
 
 func (u *unregisteredClientImpl) ResetWorkflow(ctx context.Context, workflowId, workflowRunId string, options *ResetWorkflowOptions) (string, error) {
